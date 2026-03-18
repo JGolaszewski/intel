@@ -2,7 +2,7 @@
 
 module square
 (
-    input  x2_t x2,
+    input  xt_t x2,
     output sq_t sq
 );
     // Compute x2^2:

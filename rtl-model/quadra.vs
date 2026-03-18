@@ -1,46 +1,91 @@
-`include "quadra.vh"
-`timescale 1ns / 1ps
+//
+// Quadratic polynomial:  f(x) = a + b*x2 + c*(x2^2)
+//
 
-module quadra (
-    input  ck_t clk,
-    input  rs_t rst_n,
-    input  x_t  x,
-    output y_t  y
+`include "quadra.vh"
+
+module quadra
+(
+    input ck_t clk,
+    input rs_t rst_b,
+    input x_t x,
+    output y_t y
 );
 
-    x1_t lut_idx;
-    x2_t x2_unsigned;
-    assign lut_idx     = x[23:17];
-    assign x2_unsigned = x[16:0];
+    x1_t x_m; // 7bits
+    x2_t x_l; // 14 bits
 
-    a_t coeff_a; b_t coeff_b; c_t coeff_c;
-    lut my_lut ( .x1(lut_idx), .a(coeff_a), .b(coeff_b), .c(coeff_c) );
+    // Read LUT for x_m
+    a_t lut_a_raw;
+    b_t lut_b_raw;
+    c_t lut_c_raw;
 
-    sq_t x2_sq_un;
-    square my_square ( .x2(x2_unsigned), .sq(x2_sq_un) );
 
-    logic signed [17:0] x2_s;
-    logic signed [34:0] x2_sq_s;
-    assign x2_s    = $signed({1'b0, x2_unsigned});
-    assign x2_sq_s = $signed({1'b0, x2_sq_un});
+    // Rewire x_l, x_m
+    always_comb begin
+        x_m = x[X_W-1 : XL_W];
+        x_l = x[XL_W-1 : 0];
+    end
+
+    // Connect lut
+    lut u_lut (
+        .x1(x_m),
+        .a(lut_a_raw),
+        .b(lut_b_raw),
+        .c(lut_c_raw)
+    );
+
+    // --- Cycle 1 ---
+    a_t c1_lut_a;
+    b_t c1_lut_b;
+    c_t c1_lut_c;
+    x2_t c1_x_l;
 
     always_ff @(posedge clk) begin
-        if (!rst_n) begin
-            y <= '0;
-        end else begin
-            automatic logic signed [12:0] sq_fxd = $signed({1'b0, x2_sq_un}) >>> 22;
+        c1_lut_a <= lut_a_raw;
+        c1_lut_b <= lut_b_raw;
+        c1_lut_c <= lut_c_raw;
 
-            automatic logic signed [29:0] t0_fxd = $signed(coeff_a) <<< 7;
-
-            automatic logic signed [34:0] p1 = $signed(coeff_b) * x2_s;
-            automatic logic signed [29:0] t1_fxd = p1 >>> 10; 
-
-            automatic logic signed [30:0] p2 = $signed(coeff_c) * sq_fxd;
-            automatic logic signed [29:0] t2_fxd = p2 >>> 11; 
-
-            automatic logic signed [29:0] s_fxd = t0_fxd + t1_fxd + t2_fxd;
-
-            y <= 25'((s_fxd + (30'sd1 << 3)) >>> 4);
-        end
+        c1_x_l <= x_l;
     end
+
+    // --- Cycle 2 ---
+
+    // Multiplication
+    a_t c2_lut_a;
+    mult1_t mult_1; mult1_raw_t mult_raw_1;
+    mult2_t mult_2; mult2_raw_t mult_raw_2;
+
+    // Squaring N - M - T
+    sq_in_t x_sq_in;
+    sq_raw_t x_sq_raw;
+    sq_out_t x_sq_out;
+
+    always_comb begin
+        x_sq_in = c1_x_l[SQ_W-1 : T];
+
+        // Square N-M-T
+        x_sq_raw = x_sq_in * x_sq_in;
+        x_sq_out = x_sq_raw[SQ_OUT_W_NO_T-1:SQ_OUT_T];
+        
+        // Multiply B * X_L
+        mult_raw_1 = c1_lut_b * $signed({1'b0, c1_x_l});
+
+        // Multiply C * Square
+        mult_raw_2 = c1_lut_c * $signed({1'b0, x_sq_out});
+    end
+
+
+    always_ff @(posedge clk) begin
+        c2_lut_a <= {c1_lut_a, {A_PAD{1'b0}}};
+
+        mult_1 <= mult_raw_1[MULT1_W_NO_T-1:MULT1_T];
+        mult_2 <= mult_raw_2[MULT2_W_NO_T-1:MULT2_T];
+    end
+
+    // CYCLE 3
+    always_ff @(posedge clk) begin
+        y <= c2_lut_a + mult_1 + mult_2;
+    end
+
 endmodule

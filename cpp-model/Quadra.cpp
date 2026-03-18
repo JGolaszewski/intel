@@ -243,6 +243,7 @@ y_fxd_t approxFixed (const x_fxd_t & x_fxd)
 
     // Output:
     y_fxd_t y_fxd = y_rnd;
+    
 
     if constexpr (DBG_OUT) {
         cout << "y_fxd  = "

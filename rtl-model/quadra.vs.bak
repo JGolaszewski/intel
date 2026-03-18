@@ -1,0 +1,106 @@
+`include "quadra.vh"
+`timescale 1ns / 1ps
+
+module quadra (
+    input  ck_t clk,
+    input  rs_t rst_n,
+    input  x_t  x,
+    output y_t  y
+);
+
+// -------------------------------------------------------------------------
+    // Wires for Combinational Logic
+    // -------------------------------------------------------------------------
+    x1_t lut_idx;
+    x2_t x2_unsigned;
+    assign lut_idx     = x[23:17];
+    assign x2_unsigned = x[16:0];
+
+    a_t coeff_a_wire; b_t coeff_b_wire; c_t coeff_c_wire;
+    lut my_lut ( .x1(lut_idx), .a(coeff_a_wire), .b(coeff_b_wire), .c(coeff_c_wire) );
+
+    sq_t x2_sq_un_wire;
+    square my_square ( .x2(x2_unsigned), .sq(x2_sq_un_wire) );
+
+    logic signed [17:0] x2_s_wire;
+    assign x2_s_wire = $signed({1'b0, x2_unsigned});
+
+    // -------------------------------------------------------------------------
+    // STAGE 1 REGISTERS: Fetch & Square
+    // -------------------------------------------------------------------------
+    a_t                 stg1_coeff_a;
+    b_t                 stg1_coeff_b;
+    c_t                 stg1_coeff_c;
+    logic signed [17:0] stg1_x2_s;
+    logic signed [34:0] stg1_sq_fxd;
+
+    always_ff @(posedge clk) begin
+        if (!rst_n) begin
+            stg1_coeff_a <= '0;
+            stg1_coeff_b <= '0;
+            stg1_coeff_c <= '0;
+            stg1_x2_s    <= '0;
+            stg1_sq_fxd  <= '0;
+        end else begin
+            stg1_coeff_a <= coeff_a_wire;
+            stg1_coeff_b <= coeff_b_wire;
+            stg1_coeff_c <= coeff_c_wire;
+            stg1_x2_s    <= x2_s_wire;
+            // Shift the square here to save logic later
+            stg1_sq_fxd  <= $signed({1'b0, x2_sq_un_wire}) >>> 22; 
+        end
+    end
+
+    // -------------------------------------------------------------------------
+    // STAGE 2 REGISTERS: Multiplications
+    // -------------------------------------------------------------------------
+    logic signed [29:0] stg2_t0_fxd;
+    logic signed [29:0] stg2_t1_fxd;
+    logic signed [29:0] stg2_t2_fxd;
+
+    always_ff @(posedge clk) begin
+        if (!rst_n) begin
+            stg2_t0_fxd <= '0;
+            stg2_t1_fxd <= '0;
+            stg2_t2_fxd <= '0;
+        end else begin
+            // t0 just passes through, aligned
+            stg2_t0_fxd <= $signed(stg1_coeff_a) <<< 7;
+            
+            // Heavy DSP multiplications happen here
+            stg2_t1_fxd <= ($signed(stg1_coeff_b) * stg1_x2_s) >>> 10;
+            stg2_t2_fxd <= ($signed(stg1_coeff_c) * stg1_sq_fxd) >>> 11;
+        end
+    end
+// -------------------------------------------------------------------------
+    // STAGE 3 REGISTERS: Addition, Convergent Rounding & Output
+    // -------------------------------------------------------------------------
+    logic signed [29:0] s_fxd_comb;
+    assign s_fxd_comb = stg2_t0_fxd + stg2_t1_fxd + stg2_t2_fxd;
+
+    logic               lsb;
+    logic               round_bit;
+    logic               sticky_bit;
+    logic               round_up;
+    logic signed [25:0] y_kept;
+    logic signed [25:0] y_rounded;
+
+    assign y_kept     = s_fxd_comb[29:4];   // The top 26 bits we intend to keep
+    assign lsb        = s_fxd_comb[4];      // The new LSB after truncation
+    assign round_bit  = s_fxd_comb[3];      // The 0.5 bit
+    assign sticky_bit = |s_fxd_comb[2:0];   // OR reduction of the remaining bits
+
+    // We round up if the fraction is > 0.5, OR if it's exactly 0.5 and the integer is odd
+    assign round_up   = round_bit & (lsb | sticky_bit);
+    assign y_rounded  = y_kept + {25'd0, round_up}; // Add the round bit safely
+
+    always_ff @(posedge clk) begin
+        if (!rst_n) begin
+            y <= '0;
+        end else begin
+            // Output formatting: Cast/truncate down to the final 25 bits (Y_W)
+            y <= y_rounded[24:0];
+        end
+    end
+
+endmodule

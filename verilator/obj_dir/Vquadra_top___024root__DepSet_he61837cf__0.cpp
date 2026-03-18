@@ -18,27 +18,27 @@ void Vquadra_top___024root___eval_ico(Vquadra_top___024root* vlSelf) {
     }
 }
 
-extern const VlUnpacked<IData/*21:0*/, 128> Vquadra_top__ConstPool__TABLE_hb7d20138_0;
-extern const VlUnpacked<IData/*16:0*/, 128> Vquadra_top__ConstPool__TABLE_h07b2d8b8_0;
-extern const VlUnpacked<IData/*16:0*/, 128> Vquadra_top__ConstPool__TABLE_h96de84a4_0;
+extern const VlUnpacked<IData/*21:0*/, 1024> Vquadra_top__ConstPool__TABLE_h10318558_0;
+extern const VlUnpacked<IData/*21:0*/, 1024> Vquadra_top__ConstPool__TABLE_h42ae70b1_0;
+extern const VlUnpacked<IData/*21:0*/, 1024> Vquadra_top__ConstPool__TABLE_h89b5ee39_0;
 
 VL_INLINE_OPT void Vquadra_top___024root___ico_sequent__TOP__0(Vquadra_top___024root* vlSelf) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vquadra_top___024root___ico_sequent__TOP__0\n"); );
     Vquadra_top__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     auto& vlSelfRef = std::ref(*vlSelf).get();
     // Init
-    CData/*6:0*/ __Vtableidx1;
+    SData/*9:0*/ __Vtableidx1;
     __Vtableidx1 = 0;
     // Body
-    __Vtableidx1 = (0x7fU & (vlSelfRef.x >> 0x11U));
-    vlSelfRef.quadra_top__DOT__u_quadra__DOT__coeff_a 
-        = Vquadra_top__ConstPool__TABLE_hb7d20138_0
+    __Vtableidx1 = (0x3ffU & (vlSelfRef.x >> 0xeU));
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__lut_a_raw 
+        = Vquadra_top__ConstPool__TABLE_h10318558_0
         [__Vtableidx1];
-    vlSelfRef.quadra_top__DOT__u_quadra__DOT__coeff_b 
-        = Vquadra_top__ConstPool__TABLE_h07b2d8b8_0
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__lut_b_raw 
+        = Vquadra_top__ConstPool__TABLE_h42ae70b1_0
         [__Vtableidx1];
-    vlSelfRef.quadra_top__DOT__u_quadra__DOT__coeff_c 
-        = Vquadra_top__ConstPool__TABLE_h96de84a4_0
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__lut_c_raw 
+        = Vquadra_top__ConstPool__TABLE_h89b5ee39_0
         [__Vtableidx1];
 }
 
@@ -83,61 +83,50 @@ VL_INLINE_OPT void Vquadra_top___024root___nba_sequent__TOP__0(Vquadra_top___024
     Vquadra_top__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     auto& vlSelfRef = std::ref(*vlSelf).get();
     // Body
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_lut_c 
+        = vlSelfRef.quadra_top__DOT__u_quadra__DOT__lut_c_raw;
     vlSelfRef.quadra_top__DOT__dv_p2 = ((IData)(vlSelfRef.rst_b) 
                                         && (IData)(vlSelfRef.quadra_top__DOT__dv_p1));
-    if (vlSelfRef.rst_b) {
-        vlSelfRef.quadra_top__DOT__y_p2 = vlSelfRef.quadra_top__DOT__y_p1;
-        vlSelfRef.quadra_top__DOT__y_p1 = vlSelfRef.quadra_top__DOT__y_from_quadra;
-        vlSelfRef.quadra_top__DOT__u_quadra__DOT__unnamedblk1__DOT__sq_fxd 
-            = (0x1fffU & (IData)((0x7ffffffffULL & 
-                                  VL_SHIFTRS_QQI(35,35,32, 
-                                                 (0x3ffffffffULL 
-                                                  & ((QData)((IData)(
-                                                                     (0x1ffffU 
-                                                                      & vlSelfRef.x))) 
-                                                     * (QData)((IData)(
-                                                                       (0x1ffffU 
-                                                                        & vlSelfRef.x))))), 0x16U))));
-        vlSelfRef.quadra_top__DOT__u_quadra__DOT__unnamedblk1__DOT__t0_fxd 
-            = (0x3fffffffU & VL_SHIFTL_III(30,30,32, 
-                                           VL_EXTENDS_II(30,22, vlSelfRef.quadra_top__DOT__u_quadra__DOT__coeff_a), 7U));
-        vlSelfRef.quadra_top__DOT__u_quadra__DOT__unnamedblk1__DOT__p1 
-            = (0x7ffffffffULL & VL_MULS_QQQ(35, (0x7ffffffffULL 
-                                                 & VL_EXTENDS_QI(35,17, vlSelfRef.quadra_top__DOT__u_quadra__DOT__coeff_b)), 
-                                            (0x7ffffffffULL 
-                                             & VL_EXTENDS_QI(35,18, 
-                                                             (0x1ffffU 
-                                                              & vlSelfRef.x)))));
-        vlSelfRef.quadra_top__DOT__u_quadra__DOT__unnamedblk1__DOT__t1_fxd 
-            = (0x3fffffffU & (IData)((0x7ffffffffULL 
-                                      & VL_SHIFTRS_QQI(35,35,32, vlSelfRef.quadra_top__DOT__u_quadra__DOT__unnamedblk1__DOT__p1, 0xaU))));
-        vlSelfRef.quadra_top__DOT__u_quadra__DOT__unnamedblk1__DOT__p2 
-            = (0x7fffffffU & VL_MULS_III(31, (0x7fffffffU 
-                                              & VL_EXTENDS_II(31,17, vlSelfRef.quadra_top__DOT__u_quadra__DOT__coeff_c)), 
-                                         (0x7fffffffU 
-                                          & VL_EXTENDS_II(31,13, (IData)(vlSelfRef.quadra_top__DOT__u_quadra__DOT__unnamedblk1__DOT__sq_fxd)))));
-        vlSelfRef.quadra_top__DOT__u_quadra__DOT__unnamedblk1__DOT__t2_fxd 
-            = (0x3fffffffU & VL_SHIFTRS_III(31,31,32, vlSelfRef.quadra_top__DOT__u_quadra__DOT__unnamedblk1__DOT__p2, 0xbU));
-        vlSelfRef.quadra_top__DOT__u_quadra__DOT__unnamedblk1__DOT__s_fxd 
-            = (0x3fffffffU & ((vlSelfRef.quadra_top__DOT__u_quadra__DOT__unnamedblk1__DOT__t0_fxd 
-                               + vlSelfRef.quadra_top__DOT__u_quadra__DOT__unnamedblk1__DOT__t1_fxd) 
-                              + vlSelfRef.quadra_top__DOT__u_quadra__DOT__unnamedblk1__DOT__t2_fxd));
-        vlSelfRef.quadra_top__DOT__y_from_quadra = 
-            (0x1ffffffU & VL_SHIFTRS_III(30,30,32, 
-                                         (0x3fffffffU 
-                                          & ((IData)(8U) 
-                                             + vlSelfRef.quadra_top__DOT__u_quadra__DOT__unnamedblk1__DOT__s_fxd)), 4U));
-    } else {
-        vlSelfRef.quadra_top__DOT__y_p2 = 0U;
-        vlSelfRef.quadra_top__DOT__y_p1 = 0U;
-        vlSelfRef.quadra_top__DOT__y_from_quadra = 0U;
-    }
+    vlSelfRef.y = (0x1ffffffU & ((VL_EXTENDS_II(25,22, vlSelfRef.quadra_top__DOT__u_quadra__DOT__c2_lut_a) 
+                                  + VL_EXTENDS_II(25,17, vlSelfRef.quadra_top__DOT__u_quadra__DOT__mult_1)) 
+                                 + VL_EXTENDS_II(25,8, (IData)(vlSelfRef.quadra_top__DOT__u_quadra__DOT__mult_2))));
     vlSelfRef.y_dv = vlSelfRef.quadra_top__DOT__dv_p2;
     vlSelfRef.quadra_top__DOT__dv_p1 = ((IData)(vlSelfRef.rst_b) 
                                         && (IData)(vlSelfRef.quadra_top__DOT__dv_p0));
-    vlSelfRef.y = vlSelfRef.quadra_top__DOT__y_p2;
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__mult_2 
+        = (0xffU & (vlSelfRef.quadra_top__DOT__u_quadra__DOT__mult_raw_2 
+                    >> 0x14U));
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__c2_lut_a 
+        = (0x3ffff8U & (vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_lut_a 
+                        << 3U));
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__mult_1 
+        = (0x1ffffU & (IData)((0x1ffffULL & (VL_MULS_QQQ(37, 
+                                                         (0x1fffffffffULL 
+                                                          & VL_EXTENDS_QI(37,22, vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_lut_b)), 
+                                                         (0x1fffffffffULL 
+                                                          & VL_EXTENDS_QI(37,15, (IData)(vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_x_l)))) 
+                                             >> 0x14U))));
     vlSelfRef.quadra_top__DOT__dv_p0 = ((IData)(vlSelfRef.rst_b) 
                                         && (IData)(vlSelfRef.x_dv));
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_lut_a 
+        = vlSelfRef.quadra_top__DOT__u_quadra__DOT__lut_a_raw;
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_lut_b 
+        = vlSelfRef.quadra_top__DOT__u_quadra__DOT__lut_b_raw;
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_x_l 
+        = (0x3fffU & vlSelfRef.x);
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__x_sq_in 
+        = (0xfU & ((IData)(vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_x_l) 
+                   >> 5U));
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__x_sq_raw 
+        = (0x7ffffU & ((IData)(vlSelfRef.quadra_top__DOT__u_quadra__DOT__x_sq_in) 
+                       * (IData)(vlSelfRef.quadra_top__DOT__u_quadra__DOT__x_sq_in)));
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__x_sq_out 
+        = (0x1fU & (vlSelfRef.quadra_top__DOT__u_quadra__DOT__x_sq_raw 
+                    >> 0xdU));
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__mult_raw_2 
+        = (0xfffffffU & VL_MULS_III(28, (0xfffffffU 
+                                         & VL_EXTENDS_II(28,22, vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_lut_c)), 
+                                    (0xfffffffU & VL_EXTENDS_II(28,6, (IData)(vlSelfRef.quadra_top__DOT__u_quadra__DOT__x_sq_out)))));
 }
 
 void Vquadra_top___024root___eval_triggers__act(Vquadra_top___024root* vlSelf);
@@ -203,7 +192,7 @@ void Vquadra_top___024root___eval(Vquadra_top___024root* vlSelf) {
 #ifdef VL_DEBUG
             Vquadra_top___024root___dump_triggers__ico(vlSelf);
 #endif
-            VL_FATAL_MT("/home/jgolaszewski/intel/rtl-model/quadra_top.vs", 4, "", "Input combinational region did not converge.");
+            VL_FATAL_MT("/home/jgolaszewski/intel/rtl-model/quadra_top.vs", 3, "", "Input combinational region did not converge.");
         }
         __VicoIterCount = ((IData)(1U) + __VicoIterCount);
         __VicoContinue = 0U;
@@ -219,7 +208,7 @@ void Vquadra_top___024root___eval(Vquadra_top___024root* vlSelf) {
 #ifdef VL_DEBUG
             Vquadra_top___024root___dump_triggers__nba(vlSelf);
 #endif
-            VL_FATAL_MT("/home/jgolaszewski/intel/rtl-model/quadra_top.vs", 4, "", "NBA region did not converge.");
+            VL_FATAL_MT("/home/jgolaszewski/intel/rtl-model/quadra_top.vs", 3, "", "NBA region did not converge.");
         }
         __VnbaIterCount = ((IData)(1U) + __VnbaIterCount);
         __VnbaContinue = 0U;
@@ -230,7 +219,7 @@ void Vquadra_top___024root___eval(Vquadra_top___024root* vlSelf) {
 #ifdef VL_DEBUG
                 Vquadra_top___024root___dump_triggers__act(vlSelf);
 #endif
-                VL_FATAL_MT("/home/jgolaszewski/intel/rtl-model/quadra_top.vs", 4, "", "Active region did not converge.");
+                VL_FATAL_MT("/home/jgolaszewski/intel/rtl-model/quadra_top.vs", 3, "", "Active region did not converge.");
             }
             vlSelfRef.__VactIterCount = ((IData)(1U) 
                                          + vlSelfRef.__VactIterCount);

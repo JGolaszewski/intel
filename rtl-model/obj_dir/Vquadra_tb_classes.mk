@@ -32,7 +32,6 @@ VM_CLASSES_FAST += \
 
 # Generated module classes, non-fast-path, compile with low/medium optimization
 VM_CLASSES_SLOW += \
-	Vquadra_tb__ConstPool_0 \
 	Vquadra_tb___024root__Slow \
 	Vquadra_tb___024root__DepSet_h1922bebd__0__Slow \
 	Vquadra_tb___024root__DepSet_h6d0c8fb9__0__Slow \

@@ -2,7 +2,6 @@
 
 `ifndef QUADRA_VH
 `define QUADRA_VH
-`timescale 1ns / 1ps  // Time scale
 
 typedef logic ck_t; // clock
 typedef logic rs_t; // reset
@@ -30,16 +29,79 @@ typedef logic signed [Y_W-1:0] y_t;
 // Internal precision:
 // --------------------------------------------------------------------------------
 
-localparam int A_W = 22;
-localparam int B_W = 17;
-localparam int C_W = 17;
+// A coeff type
+localparam int A_F = 20;
+localparam int A_I = 2;
+localparam int A_W = A_I + A_F;
 
 typedef logic signed [A_W-1:0] a_t;
+
+// B coeff type
+localparam int B_F = 20;
+localparam int B_I = 2;
+localparam int B_W = B_I + B_F;
+
 typedef logic signed [B_W-1:0] b_t;
+
+// C coeff type
+localparam int C_F = 20;
+localparam int C_I = 2;
+localparam int C_W = C_I + C_F;
+
 typedef logic signed [C_W-1:0] c_t;
 
-typedef logic [6:0] x1_t;
-typedef logic [16:0] x2_t;
-typedef logic [33:0] sq_t;
+
+
+// Division of X between x_m and x_l
+localparam int XL_W = 14;
+localparam int XL_F = X_F;
+localparam int XM_W = X_W - XL_W;
+
+typedef logic [XM_W-1:0] x1_t;
+typedef logic [XL_W-1:0] x2_t;
+
+// Rejected bits for square from x_l
+localparam int T = 5;
+localparam int SQ_W = XL_W - T;
+localparam int SQ_F = XL_F - T;
+
+typedef logic [SQ_W:0] sq_in_t;
+
+localparam int SQ_OUT_W_NO_T = SQ_W * 2;
+localparam int SQ_OUT_F_NO_T = SQ_F * 2;
+
+typedef logic [SQ_OUT_W_NO_T:0] sq_raw_t;
+
+localparam int SQ_OUT_T = (SQ_OUT_F_NO_T < Y_F)? 0 : SQ_OUT_F_NO_T - Y_F;
+localparam int SQ_OUT_F = (SQ_OUT_F_NO_T < Y_F)? SQ_OUT_F_NO_T : Y_F;
+localparam int SQ_OUT_W = SQ_OUT_W_NO_T - SQ_OUT_T;
+
+typedef logic [SQ_OUT_W-1:0] sq_out_t;
+
+// Multiplication types
+localparam int MULT1_W_NO_T = XL_W + B_F + B_I + 1;
+localparam int MULT1_F_NO_T = B_F + XL_F;
+
+typedef logic signed [MULT1_W_NO_T-1:0] mult1_raw_t;
+
+localparam int MULT1_T = (MULT1_W_NO_T < Y_F)? 0 : MULT1_F_NO_T - Y_F;
+localparam int MULT1_W = MULT1_W_NO_T - MULT1_T;
+
+typedef logic signed [MULT1_W-1:0] mult1_t;
+
+
+localparam int MULT2_W_NO_T = SQ_OUT_W + C_F + C_I + 1;
+localparam int MULT2_F_NO_T = C_F + SQ_OUT_F;
+
+typedef logic signed [MULT2_W_NO_T-1:0] mult2_raw_t;
+
+localparam int MULT2_T = (MULT2_W_NO_T < Y_F)? 0 : MULT2_F_NO_T - Y_F;
+localparam int MULT2_W = MULT2_W_NO_T - MULT2_T;
+
+typedef logic signed [MULT2_W-1:0] mult2_t;
+
+// Other
+
+localparam int A_PAD = Y_W - A_W;  
 
 `endif

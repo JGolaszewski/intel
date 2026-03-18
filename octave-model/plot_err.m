@@ -1,9 +1,10 @@
 #! /usr/bin/octave
+graphics_toolkit("gnuplot");
 
 clear
 close
 
-load "../c++-model/err.dat"
+load "../cpp-model/err.dat"
 
 plot(err, 'b-*')
 xlabel("n")

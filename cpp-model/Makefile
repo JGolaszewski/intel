@@ -1,11 +1,11 @@
 # Makefile
 
-SHELL        := /bin/tcsh
+SHELL        := /bin/zsh
 ROOT_DIR     := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
 TOP_DIR     = ${ROOT_DIR}/..
 
-ACT_INC_DIR = $(TOP_DIR)/libs/ac_types/include
+ACT_INC_DIR = $(TOP_DIR)/vendor/ac_types/include
 
 TGT_SRC_DIR = .
 TGT_INC_DIR = .
@@ -19,12 +19,12 @@ DEFS  =
 
 #EFS    += -DEN_DEBUG       # enable printing of debug information
 
-# Gnu C compiler:
-CC       = gcc
+# Clang C compiler:
+CC       = clang
 CFLAGS   = -std=c++17 -fPIC -Wall
 
-# Gnu C++ compiler:
-CXX      = g++
+# Clang C++ compiler:
+CXX      = clang++
 CXXFLAGS = -std=c++17 -fPIC -Wall
 
 DEBUG = 0
@@ -64,6 +64,16 @@ OBJECTS  = $(TGT_OBJ)
 
 TGT_EXE  = QuadraTb
 
+A_I_VAL ?= 2
+A_F_VAL ?= 22
+
+B_I_VAL ?= 3
+B_F_VAL ?= 22
+
+C_I_VAL ?= 3
+C_F_VAL ?= 22
+
+
 .PHONY: all
 all: $(OBJECTS) $(TGT_EXE)
 
@@ -84,6 +94,22 @@ $(TGT_OUT)/$(TGT_EXE): $(OBJECTS)
 run: $(TGT_EXE)
 	@echo 'Running $(TGT_EXE) ...'
 	@/usr/bin/time --format='Ran for %e seconds.' ./$(TGT_EXE)
+
+.PHONY: check-lut
+check-lut:
+	@echo "Building with pure math coefficients (DOUBLE precision)..."
+	@$(MAKE) -B $(TGT_EXE) DEFS="-DDOUBLE_OVERRIDE -DDBG_TST=1"
+
+.PHONY: opt-script
+opt-script: DEFS += -DA_I_VAL=$(A_I_VAL) -DA_F_VAL=$(A_F_VAL) \
+                    -DB_I_VAL=$(B_I_VAL) -DB_F_VAL=$(B_F_VAL) \
+                    -DC_I_VAL=$(C_I_VAL) -DC_F_VAL=$(C_F_VAL) \
+					-DDBG_TST=1
+
+opt-script:
+	@echo "Compilation for script finished with params:"
+	@echo "  A: $(A_I_VAL).$(A_F_VAL), B: $(B_I_VAL).$(B_F_VAL), C: $(C_I_VAL).$(C_F_VAL)"
+	@$(MAKE) -B $(TGT_EXE) DEFS="$(DEFS)"				
 
 .PHONY: clean
 clean:

@@ -2,6 +2,7 @@
 
 `ifndef QUADRA_VH
 `define QUADRA_VH
+`timescale 1ns / 1ps  // Time scale
 
 typedef logic ck_t; // clock
 typedef logic rs_t; // reset
@@ -21,7 +22,7 @@ typedef logic [X_W-1:0] x_t;
 // y [-2,2) -> s2.23
 localparam int  Y_I =  2;          //         =  2
 localparam int  Y_F = 23;          //         = 23
-localparam int  Y_W = X_I + X_F;   //  2 + 23 = 25 (s2.23)
+localparam int  Y_W = Y_I + Y_F;   //  2 + 23 = 25 (s2.23)
 
 typedef logic signed [Y_W-1:0] y_t;
 
@@ -29,6 +30,16 @@ typedef logic signed [Y_W-1:0] y_t;
 // Internal precision:
 // --------------------------------------------------------------------------------
 
-// <challenge!>
+localparam int A_W = 22;
+localparam int B_W = 17;
+localparam int C_W = 17;
+
+typedef logic signed [A_W-1:0] a_t;
+typedef logic signed [B_W-1:0] b_t;
+typedef logic signed [C_W-1:0] c_t;
+
+typedef logic [6:0] x1_t;
+typedef logic [16:0] x2_t;
+typedef logic [33:0] sq_t;
 
 `endif

@@ -2,9 +2,9 @@
 
 rm -rf run-verilator.log
 
-set TOP_DIR = ${HOME}/prj/coding-exercise2s
-set ACT_DIR = ${TOP_DIR}/libs/ac_types/include
-set CPP_DIR = ${TOP_DIR}/c++-model
+set TOP_DIR = ${HOME}/intel
+set ACT_DIR = ${TOP_DIR}/vendor/ac_types/include
+set CPP_DIR = ${TOP_DIR}/cpp-model
 set RTL_DIR = ${TOP_DIR}/rtl-model
 
 echo "--------------------------------------------------------------------------------"
@@ -15,7 +15,7 @@ set top_module = "quadra_top"
 
 verilator \
     --cc \
-    -CFLAGS "-std=c++17 -I${ACT_DIR} -I${CPP_DIR}" \
+    -CFLAGS "-std=c++17 -I${ACT_DIR} -I${CPP_DIR} -Wno-shift-negative-value -Wno-deprecated-copy" \
     ${CPP_DIR}/Quadra.cpp \
     sim_main.cpp \
     --exe \

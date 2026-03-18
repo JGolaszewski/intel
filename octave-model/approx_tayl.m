@@ -1,6 +1,5 @@
 #! /usr/bin/octave
 
-% Używamy gnuplot, aby uniknąć problemów z OpenGL
 graphics_toolkit("gnuplot");
 
 clear
@@ -16,10 +15,8 @@ c = -2*sin((2*x)-(pi/4));  # f''(x)/2!
 
 en_plot = 1; # set to 1 to enable plotting
 
-# Plot the coefficients:
 if (en_plot)
     close
-    % Tworzymy figurę w tle
     fig = figure("visible", "off"); 
     
     plot (x, a, 'b-*', x, b, 'r-*', x, c, 'g-*')
@@ -30,7 +27,6 @@ if (en_plot)
     axis ([0, 2, -2.2, 2.2])
     grid on
     
-    # --- ZAPIS WYKRESU DO PLIKU ---
     print(fig, "plot_taylor_coeffs.png", "-dpng");
     close(fig);
     printf("Wykres zapisano do pliku: plot_taylor_coeffs.png\n");
@@ -39,7 +35,6 @@ endif
 coeffs = [n a b c];
 format long
 
-# --- OTWARCIE PLIKU DO ZAPISU WSPÓŁCZYNNIKÓW ---
 filename = "lut_coeffs_taylor.txt";
 fid = fopen(filename, "w");
 
@@ -50,11 +45,10 @@ endif
 fprintf(fid, "%3s  %32s  %32s  %32s\n", "# k", "a", "b", "c");
 
 for k = 0 : N-1
-    i = k+1; # array indexing starts at 1
+    i = k+1;
     fprintf(fid, "%3d  %32.28f  %32.28f  %32.28f\n", k, a(i), b(i), c(i));
 endfor
 
-# Zamknięcie pliku
 fclose(fid);
 
 printf("Wspolczynniki zapisano do pliku: %s\n", filename);

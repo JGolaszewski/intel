@@ -29,79 +29,84 @@ typedef logic signed [Y_W-1:0] y_t;
 // Internal precision:
 // --------------------------------------------------------------------------------
 
-// A coeff type
+// SUM
+localparam int R_F = 4;
+
+localparam int S_I = Y_I;
+localparam int S_F = Y_F + R_F;  // (4 extra fractional bits to be rounded)
+localparam int S_W = S_I + S_F;
+
+typedef logic signed [S_W-1:0] s_t; // s = t0 + t1 + t2
+
+// INPUT DIVIDE
+localparam int X1_I =  1;          // integer part
+localparam int X1_F =  6;          // fractional part
+localparam int X1_W = X1_I + X1_F; // bit width
+
+typedef logic [X1_W-1:0] x1_t;
+
+localparam int X2_I =  0;          // integer part
+localparam int X2_J = X2_I - X1_F; // (this is key for proper alignment)
+localparam int X2_F =  X_W - X1_W; // fractional part
+localparam int X2_W = X2_I + X2_F; // bit width
+
+typedef logic [X2_W-1:0] x2_t;
+
+// COEFF
+localparam int A_I =  2;
 localparam int A_F = 20;
-localparam int A_I = 2;
 localparam int A_W = A_I + A_F;
 
 typedef logic signed [A_W-1:0] a_t;
 
-// B coeff type
-localparam int B_F = 20;
-localparam int B_I = 2;
+localparam int B_I =  3;
+localparam int B_F = 14;
 localparam int B_W = B_I + B_F;
 
 typedef logic signed [B_W-1:0] b_t;
 
-// C coeff type
-localparam int C_F = 20;
-localparam int C_I = 2;
+localparam int C_I =  3;
+localparam int C_F = 14;
 localparam int C_W = C_I + C_F;
 
 typedef logic signed [C_W-1:0] c_t;
 
 
+// SQUARE
+localparam int SQ_I = -6;
+localparam int SQ_F = Y_F;
+localparam int SQ_W = SQ_I + SQ_F;
 
-// Division of X between x_m and x_l
-localparam int XL_W = 14;
-localparam int XL_F = X_F;
-localparam int XM_W = X_W - XL_W;
+localparam int SQ_FULL_W = X2_W * 2;    
+localparam int SQ_DROP = (2 * X_F) - SQ_F;
 
-typedef logic [XM_W-1:0] x1_t;
-typedef logic [XL_W-1:0] x2_t;
+typedef logic [SQ_W-1:0] sq_t;
+typedef logic [SQ_FULL_W-1:0] sq_full_t;
 
-// Rejected bits for square from x_l
-localparam int T = 5;
-localparam int SQ_W = XL_W - T;
-localparam int SQ_F = XL_F - T;
+// MULTIPLICATIONS
+localparam int T0_I = A_I;
+localparam int T0_F = S_F;
+localparam int T0_W = T0_I + T0_F;
+localparam int T0_PAD = S_F - A_F;
 
-typedef logic [SQ_W:0] sq_in_t;
+typedef logic signed [T0_W-1:0] t0_t;
 
-localparam int SQ_OUT_W_NO_T = SQ_W * 2;
-localparam int SQ_OUT_F_NO_T = SQ_F * 2;
+localparam int T1_I = B_I + X2_I;
+localparam int T1_F = S_F;
+localparam int T1_W = T1_I + T1_F;
+localparam int T1_FULL_W = B_W + X2_W + 1;
+localparam int T1_FRAC_DROP = B_F + X_F - S_F;
 
-typedef logic [SQ_OUT_W_NO_T:0] sq_raw_t;
+typedef logic signed [T1_W-1:0] t1_t;
+typedef logic signed [T1_FULL_W-1:0] t1_full_t;
 
-localparam int SQ_OUT_T = (SQ_OUT_F_NO_T < Y_F)? 0 : SQ_OUT_F_NO_T - Y_F;
-localparam int SQ_OUT_F = (SQ_OUT_F_NO_T < Y_F)? SQ_OUT_F_NO_T : Y_F;
-localparam int SQ_OUT_W = SQ_OUT_W_NO_T - SQ_OUT_T;
+localparam int T2_I = C_I;
+localparam int T2_F = S_F;
+localparam int T2_W = T2_I + T2_F;
+localparam int T2_FULL_W = C_W + SQ_W + 1;
+localparam int T2_FRAC_DROP = C_F + X_F - S_F;
 
-typedef logic [SQ_OUT_W-1:0] sq_out_t;
-
-// Multiplication types
-localparam int MULT1_W_NO_T = XL_W + B_F + B_I + 1;
-localparam int MULT1_F_NO_T = B_F + XL_F;
-
-typedef logic signed [MULT1_W_NO_T-1:0] mult1_raw_t;
-
-localparam int MULT1_T = (MULT1_W_NO_T < Y_F)? 0 : MULT1_F_NO_T - Y_F;
-localparam int MULT1_W = MULT1_W_NO_T - MULT1_T;
-
-typedef logic signed [MULT1_W-1:0] mult1_t;
-
-
-localparam int MULT2_W_NO_T = SQ_OUT_W + C_F + C_I + 1;
-localparam int MULT2_F_NO_T = C_F + SQ_OUT_F;
-
-typedef logic signed [MULT2_W_NO_T-1:0] mult2_raw_t;
-
-localparam int MULT2_T = (MULT2_W_NO_T < Y_F)? 0 : MULT2_F_NO_T - Y_F;
-localparam int MULT2_W = MULT2_W_NO_T - MULT2_T;
-
-typedef logic signed [MULT2_W-1:0] mult2_t;
-
-// Other
-
-localparam int A_PAD = Y_W - A_W;  
+typedef logic signed [T2_W-1:0] t2_t;
+typedef logic signed [T2_FULL_W-1:0] t2_full_t;
 
 `endif

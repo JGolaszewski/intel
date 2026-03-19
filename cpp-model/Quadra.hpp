@@ -67,7 +67,7 @@ typedef ac_fixed<X2_W, X2_J, false, trn, AC_WRAP> x2_fxd_t; // u0.17
     #define A_I_VAL 2
 #endif
 #ifndef A_F_VAL
-    #define A_F_VAL 22
+    #define A_F_VAL 20
 #endif
 
 const int A_I =  A_I_VAL;  // <optimize>
@@ -82,7 +82,7 @@ typedef ac_fixed< A_W,  A_I, true, rdz, AC_WRAP> a_fxd_t;
     #define B_I_VAL 3
 #endif
 #ifndef B_F_VAL
-    #define B_F_VAL 22
+    #define B_F_VAL 14
 #endif
 const int B_I =  B_I_VAL;  // <optimize>
 const int B_F = B_F_VAL;  // <optimize>
@@ -96,7 +96,7 @@ typedef ac_fixed< B_W,  B_I, true, rdz, AC_WRAP> b_fxd_t;
     #define C_I_VAL 3
 #endif
 #ifndef C_F_VAL
-    #define C_F_VAL 22
+    #define C_F_VAL 14
 #endif
 const int C_I =  C_I_VAL;  // <optimize>
 const int C_F = C_F_VAL;  // <optimize>

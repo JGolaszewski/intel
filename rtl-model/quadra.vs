@@ -12,80 +12,81 @@ module quadra
     output y_t y
 );
 
-    x1_t x_m; // 7bits
-    x2_t x_l; // 14 bits
+    x1_t x1;
+    x2_t x2;
 
-    // Read LUT for x_m
-    a_t lut_a_raw;
-    b_t lut_b_raw;
-    c_t lut_c_raw;
+    a_t a;
+    b_t b;
+    c_t c;
 
-
-    // Rewire x_l, x_m
     always_comb begin
-        x_m = x[X_W-1 : XL_W];
-        x_l = x[XL_W-1 : 0];
+        x1 = x[X_W-1 : X2_W];
+        x2 = x[X2_W-1 : 0];
     end
 
-    // Connect lut
     lut u_lut (
-        .x1(x_m),
-        .a(lut_a_raw),
-        .b(lut_b_raw),
-        .c(lut_c_raw)
+        .x1(x1),
+        .a(a),
+        .b(b),
+        .c(c)
     );
 
     // --- Cycle 1 ---
-    a_t c1_lut_a;
-    b_t c1_lut_b;
-    c_t c1_lut_c;
-    x2_t c1_x_l;
+    a_t c1_a;
+    b_t c1_b;
+    c_t c1_c;
+    x2_t c1_x2;
 
     always_ff @(posedge clk) begin
-        c1_lut_a <= lut_a_raw;
-        c1_lut_b <= lut_b_raw;
-        c1_lut_c <= lut_c_raw;
+        c1_a <= a;
+        c1_b <= b;
+        c1_c <= c;
 
-        c1_x_l <= x_l;
+        c1_x2 <= x2;
     end
 
     // --- Cycle 2 ---
+    t0_t c2_t0;
+    t1_t c2_t1;
+    t2_t c2_t2;
 
-    // Multiplication
-    a_t c2_lut_a;
-    mult1_t mult_1; mult1_raw_t mult_raw_1;
-    mult2_t mult_2; mult2_raw_t mult_raw_2;
+    sq_t sq;
+    
+    square u_square(
+        .x2(c1_x2),
+        .sq(sq)
+    );
 
-    // Squaring N - M - T
-    sq_in_t x_sq_in;
-    sq_raw_t x_sq_raw;
-    sq_out_t x_sq_out;
+    always_ff @(posedge clk) begin
+        c2_t0 <= t0_t'(c1_a) << T0_PAD;
+        c2_t1 <= t1_full_t'(c1_b * $signed({1'b0, c1_x2})) >>> T1_FRAC_DROP;
+        c2_t2 <= t2_full_t'(c1_c * $signed({1'b0, sq})) >>> T2_FRAC_DROP;
+    end
+
+    // --- Cycle 3 ---
+    s_t s;
+    logic signed [S_W - R_F - 1 : 0] keep_bits;
+    logic guard_bit;
+    logic sticky_bit;
+    logic round_up;
 
     always_comb begin
-        x_sq_in = c1_x_l[SQ_W-1 : T];
-
-        // Square N-M-T
-        x_sq_raw = x_sq_in * x_sq_in;
-        x_sq_out = x_sq_raw[SQ_OUT_W_NO_T-1:SQ_OUT_T];
+        s = s_t'(c2_t0 + c2_t1 + c2_t2);
         
-        // Multiply B * X_L
-        mult_raw_1 = c1_lut_b * $signed({1'b0, c1_x_l});
-
-        // Multiply C * Square
-        mult_raw_2 = c1_lut_c * $signed({1'b0, x_sq_out});
+        keep_bits = s[S_W-1 : R_F];
+        guard_bit = s[R_F - 1];
+        
+        if (R_F > 1) begin
+            sticky_bit = (s[R_F - 2 : 0] != '0); 
+        end else begin
+            sticky_bit = 1'b0; 
+        end
+        
+        round_up = guard_bit & (sticky_bit | keep_bits[0]);
     end
 
-
     always_ff @(posedge clk) begin
-        c2_lut_a <= {c1_lut_a, {A_PAD{1'b0}}};
-
-        mult_1 <= mult_raw_1[MULT1_W_NO_T-1:MULT1_T];
-        mult_2 <= mult_raw_2[MULT2_W_NO_T-1:MULT2_T];
-    end
-
-    // CYCLE 3
-    always_ff @(posedge clk) begin
-        y <= c2_lut_a + mult_1 + mult_2;
+        y <= y_t'(keep_bits + round_up); 
     end
 
 endmodule

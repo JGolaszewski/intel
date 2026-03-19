@@ -123,6 +123,7 @@ inline void genReset
 
 // --------------------------------------------------------------------------------
 
+// CHANGED
 inline void checkOutput
 (
     const std::unique_ptr<Vquadra_top> & top,
@@ -131,60 +132,71 @@ inline void checkOutput
 {
     using namespace std;
 
-    x_fxd_t x_fxd = lat_fifo.front();
-                    lat_fifo.pop_front();
-
-    // cast input to double:
-    double  x_dbl      = x_fxd.to_double();
-
-    // get RTL output:
-    y_int_t y_rtl_int  = top->y;
-    dv_t    y_rtl_dv   = top->y_dv;
-
-    // convert to fixed:
-    y_fxd_t y_rtl_fxd  = 0; y_rtl_fxd.set_slc(0, y_rtl_int);
-
-    // cast RTL output to double::
-    double   y_rtl_dbl = y_rtl_fxd.to_double();
-
-    // C++ model:
-    y_fxd_t  y_cpp_fxd = approxFixed(x_fxd);
-    double   y_cpp_dbl = y_cpp_fxd.to_double();
-
-    // CPU refrence:
-    double   y_ref_dbl = sin((2.0 * x_dbl) - PI_OVER_4);
-
-    // Compute C++ error:
-    double   y_cpp_err  = abs(y_cpp_dbl - y_ref_dbl);
-
-    // Compute RTL error:
-    double   y_rtl_err  = abs(y_rtl_dbl - y_ref_dbl);
-
-    // Check against spec:
-    bool     cpp_err_ok = (y_cpp_err < ERR_TOL);
-    bool     rtl_err_ok = (y_rtl_err < ERR_TOL);
-    bool     in_spec    = (cpp_err_ok && rtl_err_ok);
-
-    // Check RTL vs C++ match:
-    bool     match_ok   = (y_rtl_dbl == y_cpp_dbl);
-
-    // Enable echoing of results:
-    bool     echo_en    = y_rtl_dv && (!in_spec || !match_ok);
-
-    const int SP_PREC  = 12;
-    const int SP_WIDTH = SP_PREC + 8;
-
-    if (echo_en)
+    // 1. ONLY process the check if the RTL asserts data valid
+    if (top->y_dv == 1)
     {
-        cout << "  ";
-        cout << dec << scientific << setw(SP_WIDTH) << setprecision(SP_PREC) << right << x_dbl     << "   "
-             << dec << scientific << setw(SP_WIDTH) << setprecision(SP_PREC) << right << y_ref_dbl << "   "
-             << dec << scientific << setw(SP_WIDTH) << setprecision(SP_PREC) << right << y_cpp_dbl << "  ["
-             << dec << scientific << setw(SP_WIDTH) << setprecision(SP_PREC) << right << y_cpp_err << "]  "
-             << ((match_ok) ? " ==" : " !=")
-             << dec << scientific << setw(SP_WIDTH) << setprecision(SP_PREC) << right << y_rtl_dbl << "  ["
-             << dec << scientific << setw(SP_WIDTH) << setprecision(SP_PREC) << right << y_rtl_err << "]  "
-             << endl;
+        // 2. Safety check: Ensure we don't pop an empty queue (prevents the 18446744073709551611 bug)
+        if (lat_fifo.empty())
+        {
+            cout << "FATAL: RTL asserted y_dv, but latency FIFO is empty!" << endl;
+            return;
+        }
+
+        // 3. Grab the oldest input from the queue to compare against the current output
+        x_fxd_t x_fxd = lat_fifo.front();
+        lat_fifo.pop_front();
+
+        // cast input to double:
+        double  x_dbl      = x_fxd.to_double();
+
+        // get RTL output:
+        y_int_t y_rtl_int  = top->y;
+
+        // convert to fixed:
+        y_fxd_t y_rtl_fxd  = 0; y_rtl_fxd.set_slc(0, y_rtl_int);
+
+        // cast RTL output to double::
+        double   y_rtl_dbl = y_rtl_fxd.to_double();
+
+        // C++ model:
+        y_fxd_t  y_cpp_fxd = approxFixed(x_fxd);
+        double   y_cpp_dbl = y_cpp_fxd.to_double();
+
+        // CPU refrence:
+        double   y_ref_dbl = sin((2.0 * x_dbl) - PI_OVER_4);
+
+        // Compute C++ error:
+        double   y_cpp_err  = abs(y_cpp_dbl - y_ref_dbl);
+
+        // Compute RTL error:
+        double   y_rtl_err  = abs(y_rtl_dbl - y_ref_dbl);
+
+        // Check against spec:
+        bool     cpp_err_ok = (y_cpp_err < ERR_TOL);
+        bool     rtl_err_ok = (y_rtl_err < ERR_TOL);
+        bool     in_spec    = (cpp_err_ok && rtl_err_ok);
+
+        // Check RTL vs C++ match:
+        bool     match_ok   = (y_rtl_dbl == y_cpp_dbl);
+
+        // Enable echoing of results (we already know y_dv is true because of the outer if-statement)
+        bool     echo_en    = (!in_spec || !match_ok);
+
+        const int SP_PREC  = 12;
+        const int SP_WIDTH = SP_PREC + 8;
+
+        if (echo_en)
+        {
+            cout << "  ";
+            cout << dec << scientific << setw(SP_WIDTH) << setprecision(SP_PREC) << right << x_dbl     << "   "
+                 << dec << scientific << setw(SP_WIDTH) << setprecision(SP_PREC) << right << y_ref_dbl << "   "
+                 << dec << scientific << setw(SP_WIDTH) << setprecision(SP_PREC) << right << y_cpp_dbl << "  ["
+                 << dec << scientific << setw(SP_WIDTH) << setprecision(SP_PREC) << right << y_cpp_err << "]  "
+                 << ((match_ok) ? " ==" : " !=")
+                 << dec << scientific << setw(SP_WIDTH) << setprecision(SP_PREC) << right << y_rtl_dbl << "  ["
+                 << dec << scientific << setw(SP_WIDTH) << setprecision(SP_PREC) << right << y_rtl_err << "]  "
+                 << endl;
+        }
     }
 }
 

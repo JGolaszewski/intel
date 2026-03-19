@@ -18,27 +18,24 @@ void Vquadra_top___024root___eval_ico(Vquadra_top___024root* vlSelf) {
     }
 }
 
-extern const VlUnpacked<IData/*21:0*/, 1024> Vquadra_top__ConstPool__TABLE_h10318558_0;
-extern const VlUnpacked<IData/*21:0*/, 1024> Vquadra_top__ConstPool__TABLE_h42ae70b1_0;
-extern const VlUnpacked<IData/*21:0*/, 1024> Vquadra_top__ConstPool__TABLE_h89b5ee39_0;
+extern const VlUnpacked<IData/*21:0*/, 128> Vquadra_top__ConstPool__TABLE_hb7d20138_0;
+extern const VlUnpacked<IData/*16:0*/, 128> Vquadra_top__ConstPool__TABLE_h07b2d8b8_0;
+extern const VlUnpacked<IData/*16:0*/, 128> Vquadra_top__ConstPool__TABLE_h96de84a4_0;
 
 VL_INLINE_OPT void Vquadra_top___024root___ico_sequent__TOP__0(Vquadra_top___024root* vlSelf) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vquadra_top___024root___ico_sequent__TOP__0\n"); );
     Vquadra_top__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     auto& vlSelfRef = std::ref(*vlSelf).get();
     // Init
-    SData/*9:0*/ __Vtableidx1;
+    CData/*6:0*/ __Vtableidx1;
     __Vtableidx1 = 0;
     // Body
-    __Vtableidx1 = (0x3ffU & (vlSelfRef.x >> 0xeU));
-    vlSelfRef.quadra_top__DOT__u_quadra__DOT__lut_a_raw 
-        = Vquadra_top__ConstPool__TABLE_h10318558_0
+    __Vtableidx1 = (0x7fU & (vlSelfRef.x >> 0x11U));
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__a = Vquadra_top__ConstPool__TABLE_hb7d20138_0
         [__Vtableidx1];
-    vlSelfRef.quadra_top__DOT__u_quadra__DOT__lut_b_raw 
-        = Vquadra_top__ConstPool__TABLE_h42ae70b1_0
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__b = Vquadra_top__ConstPool__TABLE_h07b2d8b8_0
         [__Vtableidx1];
-    vlSelfRef.quadra_top__DOT__u_quadra__DOT__lut_c_raw 
-        = Vquadra_top__ConstPool__TABLE_h89b5ee39_0
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__c = Vquadra_top__ConstPool__TABLE_h96de84a4_0
         [__Vtableidx1];
 }
 
@@ -83,50 +80,67 @@ VL_INLINE_OPT void Vquadra_top___024root___nba_sequent__TOP__0(Vquadra_top___024
     Vquadra_top__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     auto& vlSelfRef = std::ref(*vlSelf).get();
     // Body
-    vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_lut_c 
-        = vlSelfRef.quadra_top__DOT__u_quadra__DOT__lut_c_raw;
+    vlSelfRef.y = (0x1ffffffU & (vlSelfRef.quadra_top__DOT__u_quadra__DOT__keep_bits 
+                                 + (IData)(vlSelfRef.quadra_top__DOT__u_quadra__DOT__round_up)));
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__c2_t0 
+        = (0x1fffffffU & VL_SHIFTL_III(29,29,32, VL_EXTENDS_II(29,22, vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_a), 7U));
     vlSelfRef.quadra_top__DOT__dv_p2 = ((IData)(vlSelfRef.rst_b) 
                                         && (IData)(vlSelfRef.quadra_top__DOT__dv_p1));
-    vlSelfRef.y = (0x1ffffffU & ((VL_EXTENDS_II(25,22, vlSelfRef.quadra_top__DOT__u_quadra__DOT__c2_lut_a) 
-                                  + VL_EXTENDS_II(25,17, vlSelfRef.quadra_top__DOT__u_quadra__DOT__mult_1)) 
-                                 + VL_EXTENDS_II(25,8, (IData)(vlSelfRef.quadra_top__DOT__u_quadra__DOT__mult_2))));
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__c2_t1 
+        = (0x3fffffffU & (IData)((0x7ffffffffULL & 
+                                  VL_SHIFTRS_QQI(35,35,32, 
+                                                 (0x7ffffffffULL 
+                                                  & VL_MULS_QQQ(35, 
+                                                                (0x7ffffffffULL 
+                                                                 & VL_EXTENDS_QI(35,17, vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_b)), 
+                                                                (0x7ffffffffULL 
+                                                                 & VL_EXTENDS_QI(35,18, vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_x2)))), 0xaU))));
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__c2_t2 
+        = (0x3fffffffU & (IData)((0x7ffffffffULL & 
+                                  VL_SHIFTRS_QQI(35,35,32, 
+                                                 (0x7ffffffffULL 
+                                                  & VL_MULS_QQQ(35, 
+                                                                (0x7ffffffffULL 
+                                                                 & VL_EXTENDS_QI(35,17, vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_c)), 
+                                                                (0x7ffffffffULL 
+                                                                 & VL_EXTENDS_QI(35,18, 
+                                                                                (0x1ffffU 
+                                                                                & (IData)(
+                                                                                (0x3ffffffffULL 
+                                                                                & VL_SHIFTR_QQI(34,34,32, 
+                                                                                (0x3ffffffffULL 
+                                                                                & ((QData)((IData)(vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_x2)) 
+                                                                                * (QData)((IData)(vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_x2)))), 0x17U)))))))), 0xaU))));
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_a 
+        = vlSelfRef.quadra_top__DOT__u_quadra__DOT__a;
     vlSelfRef.y_dv = vlSelfRef.quadra_top__DOT__dv_p2;
     vlSelfRef.quadra_top__DOT__dv_p1 = ((IData)(vlSelfRef.rst_b) 
                                         && (IData)(vlSelfRef.quadra_top__DOT__dv_p0));
-    vlSelfRef.quadra_top__DOT__u_quadra__DOT__mult_2 
-        = (0xffU & (vlSelfRef.quadra_top__DOT__u_quadra__DOT__mult_raw_2 
-                    >> 0x14U));
-    vlSelfRef.quadra_top__DOT__u_quadra__DOT__c2_lut_a 
-        = (0x3ffff8U & (vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_lut_a 
-                        << 3U));
-    vlSelfRef.quadra_top__DOT__u_quadra__DOT__mult_1 
-        = (0x1ffffU & (IData)((0x1ffffULL & (VL_MULS_QQQ(37, 
-                                                         (0x1fffffffffULL 
-                                                          & VL_EXTENDS_QI(37,22, vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_lut_b)), 
-                                                         (0x1fffffffffULL 
-                                                          & VL_EXTENDS_QI(37,15, (IData)(vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_x_l)))) 
-                                             >> 0x14U))));
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_b 
+        = vlSelfRef.quadra_top__DOT__u_quadra__DOT__b;
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_x2 
+        = (0x1ffffU & vlSelfRef.x);
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__s = (0x1fffffffU 
+                                                   & (((0x3fffffffU 
+                                                        & VL_EXTENDS_II(30,29, vlSelfRef.quadra_top__DOT__u_quadra__DOT__c2_t0)) 
+                                                       + vlSelfRef.quadra_top__DOT__u_quadra__DOT__c2_t1) 
+                                                      + vlSelfRef.quadra_top__DOT__u_quadra__DOT__c2_t2));
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__keep_bits 
+        = (0x1ffffffU & (vlSelfRef.quadra_top__DOT__u_quadra__DOT__s 
+                         >> 4U));
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__guard_bit 
+        = (1U & (vlSelfRef.quadra_top__DOT__u_quadra__DOT__s 
+                 >> 3U));
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__sticky_bit 
+        = (0U != (7U & vlSelfRef.quadra_top__DOT__u_quadra__DOT__s));
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__round_up 
+        = ((IData)(vlSelfRef.quadra_top__DOT__u_quadra__DOT__guard_bit) 
+           & ((IData)(vlSelfRef.quadra_top__DOT__u_quadra__DOT__sticky_bit) 
+              | vlSelfRef.quadra_top__DOT__u_quadra__DOT__keep_bits));
+    vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_c 
+        = vlSelfRef.quadra_top__DOT__u_quadra__DOT__c;
     vlSelfRef.quadra_top__DOT__dv_p0 = ((IData)(vlSelfRef.rst_b) 
                                         && (IData)(vlSelfRef.x_dv));
-    vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_lut_a 
-        = vlSelfRef.quadra_top__DOT__u_quadra__DOT__lut_a_raw;
-    vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_lut_b 
-        = vlSelfRef.quadra_top__DOT__u_quadra__DOT__lut_b_raw;
-    vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_x_l 
-        = (0x3fffU & vlSelfRef.x);
-    vlSelfRef.quadra_top__DOT__u_quadra__DOT__x_sq_in 
-        = (0xfU & ((IData)(vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_x_l) 
-                   >> 5U));
-    vlSelfRef.quadra_top__DOT__u_quadra__DOT__x_sq_raw 
-        = (0x7ffffU & ((IData)(vlSelfRef.quadra_top__DOT__u_quadra__DOT__x_sq_in) 
-                       * (IData)(vlSelfRef.quadra_top__DOT__u_quadra__DOT__x_sq_in)));
-    vlSelfRef.quadra_top__DOT__u_quadra__DOT__x_sq_out 
-        = (0x1fU & (vlSelfRef.quadra_top__DOT__u_quadra__DOT__x_sq_raw 
-                    >> 0xdU));
-    vlSelfRef.quadra_top__DOT__u_quadra__DOT__mult_raw_2 
-        = (0xfffffffU & VL_MULS_III(28, (0xfffffffU 
-                                         & VL_EXTENDS_II(28,22, vlSelfRef.quadra_top__DOT__u_quadra__DOT__c1_lut_c)), 
-                                    (0xfffffffU & VL_EXTENDS_II(28,6, (IData)(vlSelfRef.quadra_top__DOT__u_quadra__DOT__x_sq_out)))));
 }
 
 void Vquadra_top___024root___eval_triggers__act(Vquadra_top___024root* vlSelf);

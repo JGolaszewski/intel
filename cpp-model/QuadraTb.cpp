@@ -62,8 +62,8 @@ bool testFunction (void)
     using namespace std;
 
     // Test params:
-    uint32_t m_start = 0xfffff0; // 0.0
-    uint32_t m_stop  = 0xfffff0; // 1.999...
+    uint32_t m_start = 0x0968F;//0xfffff0; // 0.0
+    uint32_t m_stop  = 0x0968F;//0xfffff0; // 1.999...
     uint32_t m_step  = 0x000101; // sparse test
 //  uint32_t m_step  = 0x000001; // exhaustive test
 

@@ -73,8 +73,8 @@ typedef logic signed [C_W-1:0] c_t;
 
 
 // SQUARE
-localparam int SQ_I = -6;
-localparam int SQ_F = Y_F;
+localparam int SQ_I = X2_I + X2_I;
+localparam int SQ_F = 24;
 localparam int SQ_W = SQ_I + SQ_F;
 
 localparam int SQ_FULL_W = X2_W * 2;    
@@ -104,7 +104,7 @@ localparam int T2_I = C_I;
 localparam int T2_F = S_F;
 localparam int T2_W = T2_I + T2_F;
 localparam int T2_FULL_W = C_W + SQ_W + 1;
-localparam int T2_FRAC_DROP = C_F + X_F - S_F;
+localparam int T2_FRAC_DROP = C_F + X_F - S_F + 1;
 
 typedef logic signed [T2_W-1:0] t2_t;
 typedef logic signed [T2_FULL_W-1:0] t2_full_t;
